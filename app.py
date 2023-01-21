@@ -1,7 +1,10 @@
 from flask import Flask, request, jsonify, current_app
 import analyzer
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 def modestring_to_enum(modestring):
     if modestring == 'normal':
@@ -33,6 +36,10 @@ def romajisystemstring_to_enum(romajisystemstring):
     else:
         return analyzer.RomajiSystem.HEPBURN
 
+def _corsify_actual_response(response):
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
 @app.route('/analyze', methods=['POST'])
 def analyze():
     if not 'text' in request.form:
@@ -46,6 +53,7 @@ def analyze():
     mode = modestring_to_enum(request.form['mode'] if 'mode' in request.form else 'normal')
     to = tostring_to_enum(request.form['to'] if 'to' in request.form else 'hiragana')
     romaji_system = romajisystemstring_to_enum(request.form['romaji_system'] if 'romaji_system' in request.form else 'hepburn') 
-    print(len(text))
+
     analisys = analyzer.Analyzer(text, mode, to, romaji_system)
-    return analisys.toJSON()
+    
+    return _corsify_actual_response(jsonify(analisys.toJSON()))
