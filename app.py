@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, current_app
+from flask import Flask, request, jsonify, make_response
 import analyzer
 from flask_cors import CORS, cross_origin
 
@@ -36,24 +36,38 @@ def romajisystemstring_to_enum(romajisystemstring):
     else:
         return analyzer.RomajiSystem.HEPBURN
 
+def _build_cors_preflight_response():
+    response = make_response()
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    response.headers.add('Access-Control-Allow-Headers', "*")
+    response.headers.add('Access-Control-Allow-Methods', "*")
+    return response
+
 def _corsify_actual_response(response):
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
-@app.route('/analyze', methods=['POST'])
+@app.route('/analyze', methods=["POST", "OPTIONS"])
 def analyze():
-    if not 'text' in request.form:
-        return jsonify({'error': 'no text provided'}), 400
-        
-    text = request.form['text']
 
-    if len(text) > 5000:
-        return jsonify({'error': 'text exceeds 5000 character limit'}), 400
+    if request.method == "OPTIONS":  # CORS preflight
+        return _build_cors_preflight_response()
 
-    mode = modestring_to_enum(request.form['mode'] if 'mode' in request.form else 'normal')
-    to = tostring_to_enum(request.form['to'] if 'to' in request.form else 'hiragana')
-    romaji_system = romajisystemstring_to_enum(request.form['romaji_system'] if 'romaji_system' in request.form else 'hepburn') 
+    elif request.method == "POST":
+        if not 'text' in request.form:
+            return jsonify({'error': 'no text provided'}), 400
 
-    analisys = analyzer.Analyzer(text, mode, to, romaji_system)
-    
-    return _corsify_actual_response(jsonify(analisys.toJSON()))
+        text = request.form['text']
+
+        if len(text) > 5000:
+            return jsonify({'error': 'text exceeds 5000 character limit'}), 400
+
+        mode = modestring_to_enum(request.form['mode'] if 'mode' in request.form else 'normal')
+        to = tostring_to_enum(request.form['to'] if 'to' in request.form else 'hiragana')
+        romaji_system = romajisystemstring_to_enum(request.form['romaji_system'] if 'romaji_system' in request.form else 'hepburn') 
+
+        analisys = analyzer.Analyzer(text, mode, to, romaji_system)
+
+        return _corsify_actual_response(jsonify(analisys.toJSON()))
+    else:
+        return jsonify({'error': 'invalid request method'}), 400
