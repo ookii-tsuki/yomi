@@ -3,7 +3,7 @@ title: Yomi
 email: mohamed6aminbenchrifa@gmail.com
 description: Yomi API is a free-to-use Japanese tokenizer and morphological analysis web API. It can take a Japanese text as an input and return a JSON response containing the tokenized text.
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "https://yourusername.github.io" # the base hostname & protocol for your site
+url: "https://ookii-tsuki.github.io/yomi" # the base hostname & protocol for your site
 
 # Build settings
 markdown: GFM
@@ -11,4 +11,4 @@ plugins:
   - jekyll-feed
 
 # Theme settings
-theme: midnight
+theme: jekyll-theme-cayman
