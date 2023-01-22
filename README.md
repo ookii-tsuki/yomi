@@ -5,11 +5,13 @@
 Yomi API is a free-to-use Japanese tokenizer and morphological analysis web API. It can take a Japanese text as an input and return a JSON response containing the tokenized text.
 
 ## Entry Point
+
 | PATH | Request type |
 |------|--------------|
 | /analyze/ | POST |
 
 ### Query strings
+
 | Name | Required | Description |
 |------|----------|----------|
 | text | Yes | The text that will be tokenized |
