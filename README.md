@@ -18,6 +18,7 @@ Yomi API is a free-to-use Japanese tokenizer and morphological analysis web API.
 | romaji_system | No | which romanization system (`hepburn`, `kunrei`) should be used when the `to` parameter is set to `romaji` (default: `hepburn`) |
 
 ### Examples
+Try a [live demo!](https://yssf8.github.io/Yomi-playground/)
 ##### Simple request using the default settings:
 curl:
 ```powershell
