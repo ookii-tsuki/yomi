@@ -54,7 +54,7 @@ def analyze():
         return _build_cors_preflight_response()
 
     elif request.method == "POST":
-        if not 'text' in request.form:
+        if not 'text' in request.form or request.form['text'] == '':
             return jsonify({'error': 'no text provided'}), 400
 
         text = request.form['text']
