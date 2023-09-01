@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, make_response
+from flask import Flask, request, jsonify, make_response, redirect
 import analyzer
 from flask_cors import CORS, cross_origin
 
@@ -46,6 +46,10 @@ def _build_cors_preflight_response():
 def _corsify_actual_response(response):
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
+
+@app.route('/')
+def home():
+    return redirect("https://ookii-tsuki.github.io/Yomi-playground/", code=302)
 
 @app.route('/analyze', methods=["POST", "OPTIONS"])
 def analyze():
